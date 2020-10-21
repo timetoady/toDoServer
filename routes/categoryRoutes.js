@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Categories = require("../schema/categories");
-const todos = require("../schema/todos");
-const Todo = require('../schema/todos')
+const Todo = require("../schema/todos");
 
 const checkError = (err, res) => {
   err && res.send(`Looks like we've got an Error: ${err}`);
@@ -12,43 +11,49 @@ const checkError = (err, res) => {
 router.post("/categories", (req, res) => {
   Categories.create(
     {
-      category: req.query.name,
+      category: req.query.category,
       todos: req.query.todoId,
     },
     (err, category) => {
       err
         ? res.send(`Looks like we've got an Error: ${err}`)
-        : Todo.findById(req.query.todoID, (err, todo) => {
-            if(err) 
-            res.send(`The todo ID adder for ${todo} categories says error is: ${err}`)
-        }) 
-            todo.categories.push(category._id)
-            todo.update(todo, (err, todo) => {
-                if (err)
-                res.send(`Error in Cat Create todo update is: ${err}`)
-            })
-        })
-        Categories.find((err, categories) => {
-            checkError(err, res);
-            res.json(categories);
+        : Todo.findById(req.query.todoId, (err, todos) => {
+            if (err)
+              res.send(
+                `The todo ID adder for ${todos} categories says error is: ${err}`
+              );
+            todos.categories.push(category._id);
+            todos.update(todo, (err, todo) => {
+              if (err)
+                res.send(`Error in cat create todo ${todo} update is: ${err}`);
+            });
           });
-    });
-
-//Get all current manufacterers
-router.get("/categories", (req, res) => {
+    }
+  );
   Categories.find((err, categories) => {
     checkError(err, res);
     res.json(categories);
   });
 });
 
+//Get all current manufacterers
+router.get("/categories", (req, res) => {
+  Categories.find((err, categories) => {
+    checkError(err, res)
+    })
+    .populate("todos")
+    .exec(function (err, category) {
+      err ? res.send(`Oops! There was an error: ${err}`) : res.json(category);
+    });
+  });
+
+
 //delete a category by id
 router.delete("/categories/:id", (req, res) => {
-  catName = Categories.findById(req.params.id).exec();
-  Categories.remove({ _id: req.params.id }, (err) => {
+  Categories.deleteOne({ _id: req.params.id }, (err) => {
     err
       ? res.send(`Error! ${err}`)
-      : res.send(`Category ${catName} ID ${req.params.id} removed.`);
+      : res.send(`Category ID ${req.params.id} removed.`);
   });
 });
 

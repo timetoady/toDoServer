@@ -11,14 +11,14 @@ const checkError = (err, res) => {
 router.post("/todos", (req, res) => {
   Todo.create(
     {
-      todo: req.query.name,
-      completed: req.query.category,
+      todo: req.query.todo,
+      completed: req.query.completed,
       category: req.query.category,
     },
     (err) => {
       err
         ? res.send(`Looks like we've got an Error: ${err}`)
-        : Todo.find((err, categorys) => {
+        : Todo.find((err, category) => {
             checkError(err, res);
           })
             .populate("category")
@@ -43,11 +43,11 @@ router.get("/todos", (req, res) => {
 });
 
 //find a specific todo by name
-router.get("/todos/:name", (req, res) => {
-  const { name } = req.params;
-  Todo.findOne({ name: `${name}` }, (err, todo) => {
+router.get("/todos/:todo", (req, res) => {
+  const { todo } = req.params;
+  Todo.findOne({ todo: `${todo}` }, (err, todo) => {
     if (err) res.send(`Error was: ${err}`);
-    if (null) res.send(`${name} not found`);
+    if (null) res.send(`${todo} not found`);
     res.json(todo);
   });
 });
@@ -75,8 +75,8 @@ router.put("/todos/:id/:key/:value", (req, res) => {
 
 //Find all todos by category ID
 router.get("/todosByCat/:catID", (req, res) => {
-  const { manuID } = req.params;
-  console.log(manuID);
+  const { catID } = req.params;
+  console.log(catID);
   Todo.find({ category: { $all: [catID] } }, (err) => {
     checkError(err, res);
   })
