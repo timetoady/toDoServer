@@ -1,0 +1,24 @@
+{
+  "name": "TodoAppAssign",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DGM-3760-Fall-2020/TodoAppAssign.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DGM-3760-Fall-2020/TodoAppAssign/issues"
+  },
+  "homepage": "https://github.com/DGM-3760-Fall-2020/TodoAppAssign#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "animate.css": "^4.1.1"
+  }
+}

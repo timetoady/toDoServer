@@ -19,13 +19,16 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
+
+app.use(express.static('src'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //Might do a static site here later. Just for the practice.
-app.get("/", (_, res) => {
-    res.send("Server for todo app.");
-  });
+// app.get("/", (_, res) => {
+//     res.send("Server for todo app.");
+//   });
+
 
   //routes
   app.use('/todos', todoRoutes)

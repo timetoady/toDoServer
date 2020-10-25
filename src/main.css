@@ -1,0 +1,259 @@
+body{
+    padding: 2%;
+    background-color: #202124;
+    color: #ccc;
+    font-family: 'Roboto', sans-serif;
+}
+
+button{
+    font-family: 'Noto Sans', sans-serif;
+}
+
+select {
+    font-family: 'Noto Sans', sans-serif;
+}
+
+input{
+    font-family: 'Roboto', sans-serif;
+}
+
+
+#reset {
+    border: none;
+    font-size: 12px;
+    background-color: #4f5158;
+    border-radius: 3px;
+    transition: .4s
+}
+
+#reset:hover{
+    background-color: red;
+    color: white;
+    animation: pulse1 2s infinite;
+    animation-timing-function: linear;   
+  }
+  
+  @keyframes pulse1 {
+    0% {background-color:red; }
+    50% {background-color:#f59352;
+    100% {background-color:red; }
+    }
+  }
+
+main {
+    max-width: 75%;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #ccc;
+    font-size: 3rem;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+#topDiv {
+    padding: 1rem;
+}
+
+#category, #showHide {
+    font-size: 20px;
+    border: none;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    background-color: rgb(224, 224, 224);
+}
+
+#category{
+    padding: .6rem;
+    width: minmax(35%, 60%);
+    display: flex;
+    justify-content: space-between;
+  
+}
+
+#catDiv button{
+    color: red;
+}
+
+#showHide {
+    padding: .65rem;
+    font-weight: 500;
+    cursor: pointer; 
+}
+
+#newToDo, #addButton {
+    padding: .8rem;
+    font-size: 20px ;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    background-color: rgb(161, 161, 161);
+}
+
+#addButton {
+    background-color: rgb(224, 224, 224);
+    cursor: pointer; 
+}
+
+#newToDo{
+    
+    transition: ease-in-out .4s;
+}
+
+#newToDo:focus, #newToDo:active{
+    background-color: rgba(255, 255, 255, 0.829);
+    color: #111;
+    outline: 0;
+    box-shadow: inset 0 0 0 1px #3E82F7;
+    transition-delay: .3s;
+    transition: ease-in-out .3s;
+
+    
+}
+
+ul {
+    font-size: 1.8rem;
+
+}
+
+ul div {
+    max-width: 60%;
+    padding: 0;
+
+}
+
+ul input {
+    font-size: 1.1rem;
+    margin-left: .4rem;
+    
+    
+}
+
+ul button {
+    color: red;
+    font-weight: 900;
+    font-size: .9rem;
+    background-color: #2021249a;
+    border: none;
+    padding: 0;
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 1.1rem;
+    transition: 0.3s;
+    
+}
+
+ul button:hover{
+    
+    color: white;
+    
+}
+
+.nostrike {
+    text-decoration: none;
+}
+
+.striked {
+    text-decoration: line-through !important;
+}
+
+.nostrike, .striked {
+    color: #ccc;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    padding-left: .6rem;
+    min-width:50%!important;
+    max-width:99.99%!important;
+    transition: width 0.25s;
+    padding: .4rem;
+    border-bottom: 1px solid #333;
+    border-top: 1px solid #333;
+}
+
+.nostrike:focus, .striked:focus {
+    outline: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.shown {
+    display: block !important;
+}
+
+.rejectDupMessage{
+    animation: shakeX;
+    animation-duration: .2s;
+
+}
+
+.rejectDupMessage::placeholder {
+    color: red;
+    font-weight: 600;
+    
+}
+
+.standardAddMessage::placeholder{
+    color: lightgray;
+    font-weight: 400;
+}
+
+@media (max-width:500px) {
+
+    h1{
+        margin: .7rem 0
+    }
+
+    ul div {
+        max-width: 94%;
+        padding: 0;
+        display: flex;
+    
+    }
+    #topDiv{
+        padding: 0
+    }
+
+    ul button{
+        margin: 0;
+        position: relative;
+    }
+
+    input #newToDo{
+        margin-bottom: .5rem
+    }
+
+body{
+    width: 100vw;
+    padding: 0;
+}
+
+ul {
+    margin: .5rem 0;
+}
+
+main {
+    max-width: 94vw;
+    margin: 0;
+}
+ul {
+    padding-left: 0;
+}
+.striked, .nostrike{
+width: 85% !important;
+}
+
+#category, #addButton, #showHide {
+    font-size: 16px;
+    padding: .5rem;
+}
+
+#newToDo  {
+    padding: .5rem;
+}
+
+
+}
+
