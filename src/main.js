@@ -4,24 +4,27 @@
 //Get cateogry info in modal instead of a prompt
 
 const allCategories = "https://blooming-castle-98003.herokuapp.com/categories"
-const allTodos = "https://blooming-castle-98003.herokuapp.com/todos"
+const allTodos = "http://localhost:3000/todos"
 
 //API Methods
 
 //Get method
-async function getAPIData(URL, modifier = " ") {
+async function getAPIData(URL, method, modifier = " ") {
   try {
     const response = await fetch(URL + `${modifier}`, {
-      "method": "GET"
+      "method": method
     });
     const data = await response.json();
+    
     return data;
   } catch (error) {
     console.error(error);
   }
 }
 
-console.log(getAPIData(allTodos))
+getAPIData(allTodos, 'GET').then(todos => {
+  console.log(todos)
+})
 
 //Main function that gets categories from localStorage and populates them in DOM with attributes.
 let catDiv = document.querySelector("#catDiv");
