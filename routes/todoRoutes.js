@@ -32,7 +32,7 @@ router.post("/todos", (req, res) => {
 });
 
 //Get all current todos
-router.get("/todos", (req, res) => {
+router.get("/", (req, res) => {
   Todo.find((err, todos) => {
     checkError(err, res);
   })

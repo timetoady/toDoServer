@@ -28,10 +28,10 @@ app.get("/", (_, res) => {
   });
 
   //routes
-  app.use('/todos/', todoRoutes)
-  app.use('/categories/', categoryRoutes)
+  app.use('/todos', todoRoutes)
+  app.use('/categories', categoryRoutes)
   
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server running hard on port ${port}`);
   });
