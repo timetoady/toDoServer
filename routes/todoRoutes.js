@@ -43,7 +43,7 @@ router.get("/todos", (req, res) => {
 });
 
 //find a specific todo by name
-router.get("/todos/:todo", (req, res) => {
+router.get("/:todo", (req, res) => {
   const { todo } = req.params;
   Todo.findOne({ todo: `${todo}` }, (err, todo) => {
     if (err) res.send(`Error was: ${err}`);
@@ -53,7 +53,7 @@ router.get("/todos/:todo", (req, res) => {
 });
 
 //Delete a todo by id
-router.delete("/todos/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   Todo.remove({ _id: req.params.id }, (err) => {
     err
       ? res.send(`Error! ${err}`)
@@ -62,7 +62,7 @@ router.delete("/todos/:id", (req, res) => {
 });
 
 //Find and change document key's value by id via direct params
-router.put("/todos/:id/:key/:value", (req, res) => {
+router.put("/:id/:key/:value", (req, res) => {
   const { id, key, value } = req.params;
   data = { [key]: value };
   Todo.findByIdAndUpdate(id, data, { new: true }, function (
@@ -74,7 +74,7 @@ router.put("/todos/:id/:key/:value", (req, res) => {
 });
 
 //Find all todos by category ID
-router.get("/todosByCat/:catID", (req, res) => {
+router.get("/byCategory/:catID", (req, res) => {
   const { catID } = req.params;
   console.log(catID);
   Todo.find({ category: { $all: [catID] } }, (err) => {

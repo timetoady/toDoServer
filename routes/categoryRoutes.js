@@ -8,7 +8,7 @@ const checkError = (err, res) => {
 };
 
 //Create Category entry
-router.post("/categories", (req, res) => {
+router.post("/", (req, res) => {
   Categories.create(
     {
       category: req.query.category,
@@ -37,7 +37,7 @@ router.post("/categories", (req, res) => {
 });
 
 //Get all current manufacterers
-router.get("/categories", (req, res) => {
+router.get("/", (req, res) => {
   Categories.find((err, categories) => {
     checkError(err, res)
     })
@@ -49,7 +49,7 @@ router.get("/categories", (req, res) => {
 
 
 //delete a category by id
-router.delete("/categories/:id", (req, res) => {
+router.delete("//:id", (req, res) => {
   Categories.deleteOne({ _id: req.params.id }, (err) => {
     err
       ? res.send(`Error! ${err}`)
@@ -58,7 +58,7 @@ router.delete("/categories/:id", (req, res) => {
 });
 
 //Find and change document key's value by id via direct params
-router.put("/categories/:id/:key/:value", (req, res) => {
+router.put("//:id/:key/:value", (req, res) => {
   const { id, key, value } = req.params;
   data = { [key]: value };
   Categories.findByIdAndUpdate(id, data, { new: true }, function (

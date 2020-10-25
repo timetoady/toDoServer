@@ -22,7 +22,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//Might do a static sight here later. Just for the practice.
+//Might do a static site here later. Just for the practice.
 app.get("/", (_, res) => {
     res.send("Server for todo app.");
   });
