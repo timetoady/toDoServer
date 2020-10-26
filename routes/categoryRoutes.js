@@ -53,9 +53,22 @@ router.get("/", (req, res) => {
 router.delete("/:id", (req, res) => {
   Categories.deleteOne({ _id: req.params.id }, (err) => {
     err
-      ? res.send(`Error! ${err}`)
+      ? res.send(`Error here! ${err}`)
       : res.send(`Category ID ${req.params.id} removed.`);
   });
+});
+
+router.delete("/purge/all", (req, res) => {
+  Categories.deleteMany({ "__v": 0 }, (err) => {
+    err
+      ? res.send(`Error! ${err}`)
+      : res.send(`Deleted ${res.deletedCount} categories.`);
+  })
+  .then(Categories.create({category: " "}), (err)  => {
+    err
+      ? res.send(`Error here! ${err}`)
+      : res.send(`Added single blank category.`);
+  })
 });
 
 //Find and change document key's value by id via direct params

@@ -3,8 +3,8 @@
 //Features to update
 //Get cateogry info in modal instead of a prompt
 
-const allCategories = "https://blooming-castle-98003.herokuapp.com/categories";
-const allTodos = "https://blooming-castle-98003.herokuapp.com/todos";
+const allCategories = "./categories";
+const allTodos = "./todos";
 
 //API Methods
 
@@ -81,7 +81,7 @@ async function updateAPIData(URL, id, key, value) {
 }
 
 const getTodos = () => {
-  getAPIData(allTodos, "GET").then(() => refreshDOM())
+  getAPIData(allTodos, "GET").then(() => refreshDOM());
 };
 
 //getsAPI data, which triggers DOMbuilder based on filtered todos
@@ -91,23 +91,33 @@ getAPIData(allTodos, "GET").then((todos) => {
 
 //General get categories
 const getCats = () => {
-  getAPIData(allCategories, "GET").then(() => refreshDOM())
+  getAPIData(allCategories, "GET")
+    .then(() => catGetter())
+    .then(() => refreshDOM());
 };
 
 //Post handler for todos
 const sendTodos = (object) => {
-  sendAPIData(allTodos, object).then(() => refreshDOM())
+  sendAPIData(allTodos, object).then(() => refreshDOM());
 };
 
 //POST handler for categories
 const sendCat = (object) => {
-  sendAPIData(allCategories, object).then(() => refreshDOM()).then(() => catGetter())
+  sendAPIData(allCategories, object)
+    .then(() => refreshDOM())
+    .then(() => catGetter());
 };
 
 const markDone = (url, id, key, value) => {
-  updateAPIData(url, id, key, value).then(() => refreshDOM())
+  updateAPIData(url, id, key, value).then(() => refreshDOM());
+};
 
-}
+const deleteAll = () => {
+  deleteAPIData(allCategories, "purge/all")
+    .then(() => deleteAPIData(allTodos, "purge/all"))
+    .then(() => refreshDOM())
+    .then(() => catGetter());
+};
 
 //Main function that gets categories from localStorage and populates them in DOM with attributes.
 let catDiv = document.querySelector("#catDiv");
@@ -216,12 +226,14 @@ let addCatToDB = (obj) => {
   //localStorage.setItem(obj.id, JSON.stringify(obj));
 };
 
-//Set initial todos to storage manually via button
-// let catReset = document.querySelector("#reset");
-// catReset.addEventListener("click", () => {
-//   localStorage.clear();
-//   resetCats();
-// });
+//Nuclear delete of all todos and categories
+let resetAll = document.querySelector("#reset");
+resetAll.addEventListener("click", () => {
+  if (window.confirm("Are you sure you want to delete all categories and todos?")) {
+    alert('Nuclear option selected!') 
+    deleteAll()
+  }  
+});
 
 // let resetCats = () => {
 //   initialCats = getCats()
@@ -317,11 +329,11 @@ let autoConstruct = (inheretCat, newVal) => {
 };
 
 const categoryConstruct = (newCategory) => {
-  console.log(`New category is ${newCategory}`)
-  newCategoryObj = {}
-  newCategoryObj["category"] = newCategory
-  sendCat(newCategoryObj)
-}
+  console.log(`New category is ${newCategory}`);
+  newCategoryObj = {};
+  newCategoryObj["category"] = newCategory;
+  sendCat(newCategoryObj);
+};
 
 //Functions to remove and update localStorage
 let removeTodoById = (id) => {
@@ -347,11 +359,13 @@ showHide.addEventListener("click", () => {
 
 //Gets the value of the category drop down
 let getCategoryValue = () => {
-  console.log(`Get cat value running.`)
+  console.log(`Get cat value running.`);
   categoryDrop.addEventListener("change", () => {
-    console.log(`Here is the name of the category:`)
+    console.log(`Here is the name of the category:`);
     console.log(categoryDrop.value);
-    console.log(`And the cat id is ${categoryDrop.options[categoryDrop.selectedIndex].id}`);
+    console.log(
+      `And the cat id is ${categoryDrop.options[categoryDrop.selectedIndex].id}`
+    );
   });
   return categoryDrop.options[categoryDrop.selectedIndex].id;
 };
@@ -362,7 +376,7 @@ let filterToDOM = (data) => {
 
   categoryByObj = {};
   data.forEach((object) => {
-    console.log(object.category.category);
+    //console.log(object.category.category);
     catDisplay = object.category.category;
     todoForList = object.todo;
     isComplete = object.completed;
@@ -456,7 +470,7 @@ let dupCheck = (value) => {
     console.log(todos);
     check = false;
     todos.forEach((object) => {
-      console.log(object.category.category);
+      //console.log(object.category.category);
       console.log(object.todo);
       if (object.todo === value && object._id === selectedCategory) {
         console.log("NOOOOOOOOPE!");
@@ -464,7 +478,6 @@ let dupCheck = (value) => {
       }
       return check;
     });
-    
   });
 };
 
@@ -583,12 +596,11 @@ let DOMbuilder = (filteredData) => {
         if (checkbox.checked) {
           console.log(`Checkbox ${checkbox.id} is checked`);
           //updateAPIData(allTodos, checkbox.id, "completed", true);
-          markDone(allTodos, checkbox.id, "completed", true)
+          markDone(allTodos, checkbox.id, "completed", true);
         } else if (checkbox.checked === false) {
           console.log(`Checkbox ${checkbox.id} is unchecked`);
-         // updateAPIData(allTodos, checkbox.id, "completed", false);
-         markDone(allTodos, checkbox.id, "completed", false)
-          
+          // updateAPIData(allTodos, checkbox.id, "completed", false);
+          markDone(allTodos, checkbox.id, "completed", false);
         }
       });
     }

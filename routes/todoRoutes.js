@@ -61,6 +61,15 @@ router.delete("/:id", (req, res) => {
   });
 });
 
+//Delete all todos
+router.delete("/purge/all", (req, res) => {
+  Todo.deleteMany({ "__v": 0 }, (err) => {
+    err
+      ? res.send(`Error! ${err}`)
+      : res.send(`Deleted ${res.deletedCount} todos.`);
+  })
+});
+
 //Find and change document key's value by id via direct params
 router.put("/:id/:key/:value", (req, res) => {
   const { id, key, value } = req.params;
