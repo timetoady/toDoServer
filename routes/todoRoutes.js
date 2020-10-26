@@ -54,7 +54,7 @@ router.get("/:todo", (req, res) => {
 
 //Delete a todo by id
 router.delete("/:id", (req, res) => {
-  Todo.remove({ _id: req.params.id }, (err) => {
+  Todo.deleteOne({ _id: req.params.id }, (err) => {
     err
       ? res.send(`Error! ${err}`)
       : res.send(`Todo ID ${req.params.id} removed`);
