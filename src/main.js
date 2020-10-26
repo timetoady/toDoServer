@@ -496,6 +496,19 @@ let dupCheckCat = (category) => {
   });
 };
 
+function debounced(delay, fn) {
+  let timerId;
+  return function (...args) {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(() => {
+      fn(...args);
+      timerId = null;
+    }, delay);
+  }
+}
+
 //The main function that shows filtered info on the DOM
 let DOMbuilder = (filteredData) => {
   console.log("DOMbuilder start!");
