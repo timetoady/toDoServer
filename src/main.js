@@ -81,42 +81,34 @@ async function updateAPIData(URL, id, key, value) {
 }
 
 const getTodos = () => {
-  getAPIData(allTodos, "GET").then((todos) => {
-    return todos;
-  });
+  getAPIData(allTodos, "GET").then(() => refreshDOM())
 };
 
+//getsAPI data, which triggers DOMbuilder based on filtered todos
 getAPIData(allTodos, "GET").then((todos) => {
   DOMbuilder(filterToDOM(todos));
 });
 
+//General get categories
 const getCats = () => {
-  getAPIData(allCategories, "GET").then((todos) => {
-    return todos;
-  });
+  getAPIData(allCategories, "GET").then(() => refreshDOM())
 };
 
 //Post handler for todos
 const sendTodos = (object) => {
-  sendAPIData(allTodos, object).then((todos) => {
-    return todos;
-  });
+  sendAPIData(allTodos, object).then(() => refreshDOM())
 };
 
 //POST handler for categories
 const sendCat = (object) => {
-  sendAPIData(allCategories, object).then((category) => {
-    return category;
-  });
+  sendAPIData(allCategories, object).then(() => refreshDOM())
+  .then(() => document.querySelector(`#input${object._id}`).focus())
 };
 
-// getAPIData(allTodos, 'GET').then(todos => {
-//   console.log(todos)
-// })
+const markDone = (url, id, key, value) => {
+  updateAPIData(url, id, key, value).then(() => refreshDOM())
 
-// getAPIData(allCategories, 'GET').then(categories => {
-//   console.log(categories)
-// })
+}
 
 //Main function that gets categories from localStorage and populates them in DOM with attributes.
 let catDiv = document.querySelector("#catDiv");
@@ -148,25 +140,19 @@ let catGetter = () => {
     });
     //Here, after the categories populated from the DB, automaticaly adds a blank &
     //a new category adding option.
-    let addBlankCat = document.createElement("option");
-    addBlankCat.setAttribute("id", "5f967275d64a215a10224085");
-    addBlankCat.value = "";
-    addBlankCat.textContent = "";
     let newCatAdd = document.createElement("option");
     newCatAdd.setAttribute("id", "newCat");
     newCatAdd.value = "new";
     newCatAdd.textContent = "Add new category...";
-    categoryDrop.appendChild(addBlankCat);
     categoryDrop.appendChild(newCatAdd);
     categoryDrop.addEventListener("change", () => {
       if (categoryDrop.value === "new") {
         newCat = prompt("Add a new category");
         badCatCheck = badCatInput(newCat);
         if (badCatCheck === false) {
-          let newCon = categoryConstruct(newCat);
-          catGetter();
-          refreshDOM();
-          document.querySelector(`#input${newCon}`).focus();
+          categoryConstruct(newCat);
+          //catGetter();
+          //refreshDOM();
         }
       }
     });
@@ -339,8 +325,8 @@ const categoryConstruct = (newCategory) => {
 }
 
 //Functions to remove and update localStorage
-let removeInfoById = (id) => {
-  deleteAPIData(allTodos, id);
+let removeTodoById = (id) => {
+  deleteAPIData(allTodos, id).then(() => refreshDOM());
 };
 
 //Function to change info requires the ID, the key to be changed, and the value that will be changed
@@ -437,7 +423,7 @@ const governAddTodo = () => {
     newToDo.placeholder = "Enter new todo...";
     newToDo.classList.remove("rejectDupMessage");
     autoConstruct(getCategoryValue(), newToDo.value);
-    refreshDOM();
+    //refreshDOM();
     newToDo.value = null;
     newToDo.focus();
   }
@@ -477,8 +463,9 @@ let dupCheck = (value) => {
         console.log("NOOOOOOOOPE!");
         check = true;
       }
+      return check;
     });
-    return check;
+    
   });
 };
 
@@ -550,7 +537,7 @@ let DOMbuilder = (filteredData) => {
       //     newX.textContent = "✕";
       //     //flabby
       //     newX.addEventListener("click", () => {
-      //       removeInfoById(newCheck.id);
+      //       removeTodoById(newCheck.id);
       //       refreshDOM();
       //     });
       //     newInput.setAttribute("id", newCheck.id);
@@ -584,9 +571,9 @@ let DOMbuilder = (filteredData) => {
       let removeIt = document.createElement("button");
       removeIt.textContent = "✕";
       removeIt.addEventListener("click", () => {
-        removeInfoById(checkbox.id);
-        refreshDOM();
-        catGetter();
+        removeTodoById(checkbox.id);
+        //refreshDOM();
+        //catGetter();
       });
       todoDiv.appendChild(checkbox);
       todoDiv.appendChild(todoInput);
@@ -596,12 +583,13 @@ let DOMbuilder = (filteredData) => {
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
           console.log(`Checkbox ${checkbox.id} is checked`);
-          updateAPIData(allTodos, checkbox.id, "completed", true);
-          refreshDOM();
+          //updateAPIData(allTodos, checkbox.id, "completed", true);
+          markDone(allTodos, checkbox.id, "completed", true)
         } else if (checkbox.checked === false) {
           console.log(`Checkbox ${checkbox.id} is unchecked`);
-          updateAPIData(allTodos, checkbox.id, "completed", false);
-          refreshDOM();
+         // updateAPIData(allTodos, checkbox.id, "completed", false);
+         markDone(allTodos, checkbox.id, "completed", false)
+          
         }
       });
     }
