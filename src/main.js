@@ -60,7 +60,7 @@ async function deleteAPIData(URL, ID) {
     const response = await fetch(URL + `/${ID}`, {
       method: "DELETE",
     });
-    const data = await response.json();
+    const data = await response.text();
     return data;
   } catch (error) {
     console.error(error);
