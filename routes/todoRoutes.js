@@ -8,16 +8,16 @@ const checkError = (err, res) => {
 
 
 //Create todo entry
-router.post("/todos", (req, res) => {
+router.post("/", (req, res) => {
   Todo.create(
     {
-      todo: req.query.todo,
-      completed: req.query.completed,
-      category: req.query.category,
+      todo: req.body.todo,
+      completed: req.body.completed,
+      category: req.body.category,
     },
     (err) => {
       err
-        ? res.send(`Looks like we've got an Error: ${err}`)
+        ? res.send(`Sorry, looks like we've got an Error: ${err}`)
         : Todo.find((err, category) => {
             checkError(err, res);
           })

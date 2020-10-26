@@ -11,45 +11,46 @@ const checkError = (err, res) => {
 router.post("/", (req, res) => {
   Categories.create(
     {
-      category: req.query.category,
-      todos: req.query.todoId,
+      category: req.body.category,
+      todos: req.body.todoId,
     },
     (err, category) => {
       err
         ? res.send(`Looks like we've got an Error: ${err}`)
-        : Todo.findById(req.query.todoId, (err, todos) => {
-            if (err)
-              res.send(
-                `The todo ID adder for ${todos} categories says error is: ${err}`
-              );
-            todos.categories.push(category._id);
-            todos.update(todo, (err, todo) => {
-              if (err)
-                res.send(`Error in cat create todo ${todo} update is: ${err}`);
-            });
+        : 
+        // Todo.findById(req.body.todoId, (err, todos) => {
+        //     if (err)
+        //       res.send(
+        //         `The todo ID adder for ${todos} categories says error is: ${err}`
+        //       );
+        //     todos.categories.push(category._id);
+        //     todos.update(todo, (err, todo) => {
+        //       if (err)
+        //         res.send(`Error in cat create todo ${todo} update is: ${err}`);
+        //     });
+        //   });
+          Categories.find((err, categories) => {
+            checkError(err, res);
+            res.json(categories);
           });
     }
   );
-  Categories.find((err, categories) => {
-    checkError(err, res);
-    res.json(categories);
-  });
+
 });
 
 //Get all current manufacterers
 router.get("/", (req, res) => {
   Categories.find((err, categories) => {
-    checkError(err, res)
-    })
+    checkError(err, res);
+  })
     .populate("todos")
     .exec(function (err, category) {
       err ? res.send(`Oops! There was an error: ${err}`) : res.json(category);
     });
-  });
-
+});
 
 //delete a category by id
-router.delete("//:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   Categories.deleteOne({ _id: req.params.id }, (err) => {
     err
       ? res.send(`Error! ${err}`)
@@ -58,7 +59,7 @@ router.delete("//:id", (req, res) => {
 });
 
 //Find and change document key's value by id via direct params
-router.put("//:id/:key/:value", (req, res) => {
+router.put("/:id/:key/:value", (req, res) => {
   const { id, key, value } = req.params;
   data = { [key]: value };
   Categories.findByIdAndUpdate(id, data, { new: true }, function (
