@@ -3,8 +3,8 @@
 //Features to update
 //Get cateogry info in modal instead of a prompt
 
-const allCategories = "./categories";
-const allTodos = "./todos";
+const allCategories = "https://blooming-castle-98003.herokuapp.com/categories";
+const allTodos = "https://blooming-castle-98003.herokuapp.com/todos";
 
 //API Methods
 
@@ -101,8 +101,7 @@ const sendTodos = (object) => {
 
 //POST handler for categories
 const sendCat = (object) => {
-  sendAPIData(allCategories, object).then(() => refreshDOM())
-  .then(() => document.querySelector(`#input${object._id}`).focus())
+  sendAPIData(allCategories, object).then(() => refreshDOM()).then(() => catGetter())
 };
 
 const markDone = (url, id, key, value) => {
