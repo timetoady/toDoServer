@@ -15,7 +15,7 @@ You'll need to install [Node.js](https://nodejs.org/en/), and npm the following 
 * express
 * body-parser
 * dotenv*
-* mongooose
+* mongoose
 
 Also useful: nodemon to run local server that recompiles after any changes made.
 
@@ -24,6 +24,10 @@ Also useful: nodemon to run local server that recompiles after any changes made.
 You'll also need to obtain a mongoDB Atlas cluster or similar to host your data, and whitelist the needed IP addresses. If you want to host the code, heroku.com can work. 
 
 Here's a handy guide on getting heroku and MongoDB/atlas [talking to each other](https://dev.to/cpclark360/how-to-host-a-restful-node-js-server-with-mongodb-atlas-database-on-heroku-1opl). 
+
+## API Information 
+[HERE](https://github.com/timetoady/toDoServer/blob/main/APIreadme.md)
+
 
 ## Special secret
 
