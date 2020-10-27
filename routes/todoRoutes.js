@@ -70,6 +70,7 @@ router.delete("/purge/all", (req, res) => {
   })
 });
 
+//Delete all todos in given category
 router.delete("/deleteAll/:category", (req, res) =>{
   Todo.deleteMany({"category": req.params.category}, (err) => {
     err
