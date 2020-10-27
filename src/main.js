@@ -81,6 +81,19 @@ async function deleteAPIData(URL, ID) {
   }
 }
 
+// //DELETE multiple method
+// async function deleteMultipleAPIData(URL, ID) {
+//   try {
+//     const response = await fetch(URL + `/${ID}`, {
+//       method: "DELETE",
+//     });
+//     const data = await response.text();
+//     return data;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+
 //PUT method
 async function updateAPIData(URL, id, key, value) {
   try {
@@ -118,7 +131,7 @@ const sendTodos = (object) => {
 //POST handler for categories
 const sendCat = (object) => {
   sendAPIData(allCategories, object)
-    .then(() => refreshDOM())
+    // .then(() => refreshDOM())
     .then(() => catGetter());
 };
 
@@ -136,8 +149,11 @@ const deleteAll = () => {
 
 //deletes selected category
 const removeSelectedCategory = (id) => {
-  console.log(`Here is the id to delete: ${id}`);
-  deleteAPIData(allCategories, id)
+  console.log(`Here is the category ID to delete: ${id}`);
+  deleteAPIData(allTodos, `deleteAll/${id}`)
+    .then(() => {
+      deleteAPIData(allCategories, id);
+    })
     .then(() => refreshDOM())
     .then(() => catGetter());
 };
@@ -210,9 +226,9 @@ let badCatInput = (input) => {
         switch (input.length) {
           case 1:
           case 2:
-          alert('Category is too short')
-          catGetter();
-          break;
+            alert("Category is too short");
+            catGetter();
+            break;
           default:
             checkCatDups(input);
         }
@@ -233,9 +249,11 @@ const checkCatDups = (newCategory) => {
         alert("Category already added.");
         catGetter();
         return;
-      } 
-      });
-    if (check === true) {categoryConstruct(newCategory)};
+      }
+    });
+    if (check === true) {
+      categoryConstruct(newCategory);
+    }
   });
 };
 
@@ -692,8 +710,6 @@ window.addEventListener("keydown", ({ key }) => {
 
   if (keySequence.every((v, k) => v === userInput[k])) {
     contra.play();
-    autoConstruct("Lives", 30);
-    refreshDOM();
-    catGetter();
+    categoryConstruct("Lives");
   }
 });
