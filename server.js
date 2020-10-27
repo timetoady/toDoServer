@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 require("dotenv").config();
-mongoose.set('useFindAndModify', false);
+mongoose.set("useFindAndModify", false);
 
 let port = process.env.PORT;
 if (port == null || port == "") {
@@ -11,8 +11,8 @@ if (port == null || port == "") {
 }
 
 //define routes
-const todoRoutes = require('./routes/todoRoutes')
-const categoryRoutes = require('./routes/categoryRoutes')
+const todoRoutes = require("./routes/todoRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 //Access MongoDB
 const mongoDB = process.env.MONGODB_URL;
@@ -20,22 +20,14 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
-
-app.use(express.static('src'))
+app.use(express.static("src"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//Might do a static site here later. Just for the practice.
-// app.get("/", (_, res) => {
-//     res.send("Server for todo app.");
-//   });
-
-
-  //routes
-  app.use('/todos', todoRoutes)
-  app.use('/categories', categoryRoutes)
-  
+//routes
+app.use("/todos", todoRoutes);
+app.use("/categories", categoryRoutes);
 
 app.listen(port, () => {
-    console.log(`Server running hard on port ${port}`);
-  });
+  console.log(`Server running hard on port ${port}`);
+});

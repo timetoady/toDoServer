@@ -6,6 +6,19 @@
 const allCategories = "./categories";
 const allTodos = "./todos";
 
+//debouncer
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    const context = this;
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      timeout = null;
+      func.apply(context, args);
+    }, wait);
+  };
+}
+
 //API Methods
 
 //General method method
@@ -112,12 +125,26 @@ const markDone = (url, id, key, value) => {
   updateAPIData(url, id, key, value).then(() => refreshDOM());
 };
 
+//deletes all cateogories and
 const deleteAll = () => {
-  deleteAPIData(allCategories, "purge/all")
-    .then(() => deleteAPIData(allTodos, "purge/all"))
+  deleteAPIData(allTodos, "purge/all")
+    .then(() => deleteAPIData(allCategories, "purge/all"))
     .then(() => refreshDOM())
     .then(() => catGetter());
 };
+
+//deletes selected category
+const removeSelectedCategory = (id) => {
+  console.log(`Here is the id to delete: ${id}`);
+  deleteAPIData(allCategories, id)
+    .then(() => refreshDOM())
+    .then(() => catGetter());
+};
+
+const removeButton = document.querySelector("#removeButton");
+removeButton.addEventListener("click", () => {
+  removeSelectedCategory(getCategoryValue());
+});
 
 //Main function that gets categories from localStorage and populates them in DOM with attributes.
 let catDiv = document.querySelector("#catDiv");
@@ -157,12 +184,7 @@ let catGetter = () => {
     categoryDrop.addEventListener("change", () => {
       if (categoryDrop.value === "new") {
         newCat = prompt("Add a new category");
-        badCatCheck = badCatInput(newCat);
-        if (badCatCheck === false) {
-          categoryConstruct(newCat);
-          //catGetter();
-          //refreshDOM();
-        }
+        badCatInput(newCat);
       }
     });
   });
@@ -170,28 +192,12 @@ let catGetter = () => {
 
 //function for various invalid category entries
 let badCatInput = (input) => {
-  if (dupCheckCat(input) === true) {
-    alert("Category already added.");
-    catGetter();
-    return true;
+  if (input === null) {
+    return;
   } else {
-    switch (input) {
-      case null:
+    switch (input.toLowerCase()) {
       case undefined:
-        alert("Null and undefined values not valid");
-        catGetter();
-        return true;
-      case "":
-      case " ":
-      case "  ":
-      case "   ":
-      case "    ":
-      case "     ":
-      case "      ":
-      case "       ":
-      case "        ":
-      case "         ":
-        alert("Blank category already added.");
+        alert("Undefined values not valid");
         catGetter();
         return true;
       case "fuck":
@@ -200,9 +206,36 @@ let badCatInput = (input) => {
         catGetter();
         return true;
       default:
-        return false;
+        switch (input.length) {
+          case 1:
+          case 2:
+          alert('Category is too short')
+          catGetter();
+          break;
+          default:
+            checkCatDups(input);
+        }
     }
   }
+};
+
+//Checks if incoming category is duplicate from DB
+const checkCatDups = (newCategory) => {
+  getAPIData(allCategories, "GET").then((category) => {
+    let check = true;
+    category.forEach((object) => {
+      console.log(
+        `checkCatdups says it's ${object.category.category} vs incoming category ${newCategory}`
+      );
+      if (object.category === newCategory) {
+        check = false;
+        alert("Category already added.");
+        catGetter();
+        return;
+      } 
+      });
+    if (check === true) {categoryConstruct(newCategory)};
+  });
 };
 
 //Small function that refreshes the DOM rendering as needed. Will do replaceWith() next time.
@@ -229,10 +262,12 @@ let addCatToDB = (obj) => {
 //Nuclear delete of all todos and categories
 let resetAll = document.querySelector("#reset");
 resetAll.addEventListener("click", () => {
-  if (window.confirm("Are you sure you want to delete all categories and todos?")) {
-    alert('Nuclear option selected!') 
-    deleteAll()
-  }  
+  if (
+    window.confirm("Are you sure you want to delete all categories and todos?")
+  ) {
+    alert("Nuclear option selected!");
+    deleteAll();
+  }
 });
 
 // let resetCats = () => {
@@ -422,24 +457,38 @@ const showStateSet = () => {
 let thatsADup = new Audio("src/incorrect.wav");
 
 const governAddTodo = () => {
-  isDups = dupCheck(newToDo.value);
-  console.log(`isDups says ${isDups}`);
-  if (isDups === true) {
-    console.log(`isDups = ${isDups}`);
-    newToDo.placeholder = "Duplicate todo provided";
-    thatsADup.play();
-    newToDo.classList.remove("rejectDupMessage");
-    void newToDo.offsetWidth;
-    newToDo.classList.add("rejectDupMessage");
-    newToDo.value = null;
-  } else {
-    newToDo.placeholder = "Enter new todo...";
-    newToDo.classList.remove("rejectDupMessage");
-    autoConstruct(getCategoryValue(), newToDo.value);
-    //refreshDOM();
-    newToDo.value = null;
-    newToDo.focus();
-  }
+  getAPIData(allTodos, "GET").then((todo) => {
+    let check = false;
+    todo.forEach((object) => {
+      console.log(`${object.todo} vs incoming todo ${newToDo.value}`);
+      console.log(
+        `${object.category.category} vs incoming category ${categoryDrop.value}`
+      );
+      if (
+        object.todo === newToDo.value &&
+        object.category.category === categoryDrop.value
+      ) {
+        check = true;
+      }
+    });
+    console.log(`govern says check is ${check}`);
+    if (check === true) {
+      console.log(`isDups = ${check}`);
+      newToDo.placeholder = "Duplicate todo provided";
+      thatsADup.play();
+      newToDo.classList.remove("rejectDupMessage");
+      void newToDo.offsetWidth;
+      newToDo.classList.add("rejectDupMessage");
+      newToDo.value = null;
+    } else {
+      newToDo.placeholder = "Enter new todo...";
+      newToDo.classList.remove("rejectDupMessage");
+      autoConstruct(getCategoryValue(), newToDo.value);
+      //refreshDOM();
+      newToDo.value = null;
+      newToDo.focus();
+    }
+  });
 };
 
 newToDo.addEventListener("keydown", (event) => {
@@ -460,26 +509,6 @@ newToDo.addEventListener("blur", () => {
 addButton.addEventListener("click", () => {
   governAddTodo();
 });
-
-//checks for duplicates for added todos
-let dupCheck = (value) => {
-  selectedCategory = getCategoryValue();
-  console.log("dupCheck running");
-  console.log(`Incoming category is ${value}`);
-  getAPIData(allTodos, "GET").then((todos) => {
-    console.log(todos);
-    check = false;
-    todos.forEach((object) => {
-      //console.log(object.category.category);
-      console.log(object.todo);
-      if (object.todo === value && object._id === selectedCategory) {
-        console.log("NOOOOOOOOPE!");
-        check = true;
-      }
-      return check;
-    });
-  });
-};
 
 //Checks for duplicates for adding categories
 let dupCheckCat = (category) => {
@@ -506,7 +535,7 @@ function debounced(delay, fn) {
       fn(...args);
       timerId = null;
     }, delay);
-  }
+  };
 }
 
 //The main function that shows filtered info on the DOM
@@ -546,7 +575,10 @@ let DOMbuilder = (filteredData) => {
       checkbox.type = "checkbox";
       checkbox.id = `${todoStates.id}`;
       todoInput.addEventListener("input", () => {
-        updateAPIData(allTodos, checkbox.id, "todo", todoInput.value);
+        debounce(
+          updateAPIData(allTodos, checkbox.id, "todo", todoInput.value),
+          600
+        );
       });
 
       //Experimental auto add new entry box
@@ -631,6 +663,11 @@ function resizable(el, factor) {
   for (var i in e) el.addEventListener(e[i], resize, false);
   resize();
 }
+
+// categoryDrop = document.querySelector("#category")
+// categoryDrop.addEventListener("change", () => {
+//   console.log(categoryDrop.options[categoryDrop.selectedIndex].id)
+// })
 
 //Extra fun
 const keySequence = [
