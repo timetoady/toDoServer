@@ -6,7 +6,7 @@ This to-do app allows you to add and remove categories and to-dos on the fly. Yo
 
 The app has a few hard-coded objects at the top, but is primarily dynamically rendered JavaScript that filters the database info and renders it to the DOM with needed alterations for appearance and interaction elements.
 
-Structurally, the front end had to be refactored to account for the asynchronous API calls sending data back and forth. 
+Structurally, the front end had to be refactored to account for the asynchronous API calls sending data back and forth. The app is also very "talky"--it sends a lot of specific information to the console to let you know exactly when duplicates are being checked and against what, what objects are being given an received, and when the DOM is being rendered, and more.
 
 ## To Run Locally
 
