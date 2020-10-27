@@ -2,6 +2,7 @@
 
 //Features to update
 //Get cateogry info in modal instead of a prompt
+//Set up working debounce for editing todos
 
 const allCategories = "./categories";
 const allTodos = "./todos";
