@@ -4,9 +4,7 @@
 
 This to-do app allows you to add and remove categories and to-dos on the fly. You can also alter to-dos by simply selecting it and typing. Removing a category that has to-dos will also remove all to-dos that have that category, so be careful there.
 
-The app has a few hard-coded objects at the top, but is primarily dynamically rendered JavaScript that filters the database info and renders it to the DOM with needed alterations for appearance and interaction elements.
-
-Structurally, the front end had to be refactored to account for the asynchronous API calls sending data back and forth. The app is also very "talky"--it sends a lot of specific information to the console to let you know exactly when duplicates are being checked and against what, what objects are being given an received, and when the DOM is being rendered, and more.
+The front end is hosted on static site generated in express, and the back end is divided into to-do routes and category routes. POST objects to the to-do schema take a string of the new to-do, a Boolean on if it's completed, and the given category id, which when received automatically populates that category's information. The category scheme currently only takes the category name, but should take to-dos as soon as this is fixed (although the way the data is interpreted when its pulled by the get and then filtered for showing in the DOM does not depend on this anyway.)
 
 ## To Run Locally
 
